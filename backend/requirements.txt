@@ -1,0 +1,10 @@
+Flask
+Flask-CORS
+ollama
+chromadb
+sentence-transformers
+markdown
+PyYAML
+python-dotenv
+loguru
+pytest

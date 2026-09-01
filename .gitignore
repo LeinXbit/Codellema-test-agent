@@ -1,0 +1,169 @@
+# ====================
+# Python 相关
+# ====================
+
+# Python 字节码缓存
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 编译文件
+*.so
+*.pyd
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+envs/
+*.venv
+
+# 包管理器文件
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+*.pyre
+
+# 分发/打包文件
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# ====================
+# 本地配置与敏感信息
+# ====================
+
+# 环境变量（含密钥）
+.env
+.env.local
+.env.*.local
+
+# 应用密钥文件
+*.key
+*.pem
+*.crt
+*.csr
+
+# ====================
+# 数据目录（本地存储）
+# ====================
+
+# 向量数据库
+backend/data/chroma_db/
+chroma_db/
+
+# 日志文件
+backend/data/logs/
+*.log
+logs/
+*.log.*
+
+# 上传/临时文件
+backend/data/uploads/
+backend/data/temp/
+*.tmp
+*.temp
+
+# ====================
+# 模型文件（大文件不提交）
+# ====================
+
+# 本地模型文件
+models/*.gguf
+models/*.bin
+models/*.onnx
+models/*.safetensors
+*.pth
+*.h5
+*.pb
+
+# 但保留 models/README.md（用于说明模型清单）
+!models/README.md
+
+# ====================
+# 前端相关
+# ====================
+
+# 依赖目录（如果后续引入 npm）
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 构建产物（如果后续引入构建工具）
+dist/
+build/
+*.min.js
+*.min.css
+
+# ====================
+# IDE 和编辑器
+# ====================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# PyCharm / IntelliJ IDEA
+.idea/
+*.iml
+
+# Vim
+*.swp
+*.swo
+*~
+.*.swp
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ====================
+# 操作系统
+# ====================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+*.orig
+
+# ====================
+# 文档和临时文件
+# ====================
+
+# 临时备份文件
+*.bak
+*.backup
+*.tmp
+*~
+
+# Jupyter Notebook（如使用）
+.ipynb_checkpoints/
+*.ipynb
+
+# ====================
+# Docker（如后续使用）
+# ====================
+
+*.pid
+*.pid.lock
+.dockerignore
