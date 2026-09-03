@@ -9,6 +9,7 @@ class TemplateManager {
         this.activeTemplate = null;
         this.bar = document.getElementById('templateBar');
         this.input = document.getElementById('messageInput');
+        this.placeholderBackup = '输入您的问题...';
     }
 
     /**
@@ -45,11 +46,10 @@ class TemplateManager {
         this.bar.innerHTML = this.templates.map(t => `
             <button class="template-btn" data-template="${t.name}" data-placeholder="${t.placeholder || '请输入...'}">
                 <span class="icon">${this.getIcon(t.name)}</span>
-                ${t.label}
+                ${this.getShortLabel(t.label)}
             </button>
         `).join('');
 
-        // 绑定点击事件
         this.bar.querySelectorAll('.template-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 this.selectTemplate(btn.dataset.template);
@@ -70,6 +70,14 @@ class TemplateManager {
     }
 
     /**
+     * 获取简短标签（去除图标和多余文字）
+     */
+    getShortLabel(label) {
+        // 移除图标和空格，只保留文字
+        return label.replace(/^[^\s]+\s/, '').trim();
+    }
+
+    /**
      * 选择模板
      */
     selectTemplate(templateName) {
@@ -80,7 +88,7 @@ class TemplateManager {
         if (this.activeTemplate === templateName) {
             // 取消选择
             this.activeTemplate = null;
-            this.input.placeholder = '输入您的问题...';
+            this.input.placeholder = this.placeholderBackup;
             this.bar.querySelectorAll('.template-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -109,7 +117,7 @@ class TemplateManager {
      */
     clearActive() {
         this.activeTemplate = null;
-        this.input.placeholder = '输入您的问题...';
+        this.input.placeholder = this.placeholderBackup;
         this.bar.querySelectorAll('.template-btn').forEach(btn => {
             btn.classList.remove('active');
         });

@@ -4,8 +4,9 @@
  */
 
 class ChatManager {
-    constructor(templateManager) {
+    constructor(templateManager, ragManager) {
         this.templateManager = templateManager;
+        this.ragManager = ragManager;
         this.sessionId = null;
         this.isLoading = false;
         this.messages = [];
@@ -26,12 +27,10 @@ class ChatManager {
      * 绑定 UI 事件
      */
     bindEvents() {
-        // 发送按钮
         this.sendBtn.addEventListener('click', () => {
             this.handleSend();
         });
 
-        // 回车发送（Shift+Enter 换行）
         this.input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -39,13 +38,11 @@ class ChatManager {
             }
         });
 
-        // 自动调整输入框高度
         this.input.addEventListener('input', () => {
             this.input.style.height = 'auto';
             this.input.style.height = Math.min(this.input.scrollHeight, 160) + 'px';
         });
 
-        // 清空对话
         this.clearBtn.addEventListener('click', () => {
             if (confirm('确定要清空所有对话吗？')) {
                 this.clear();
@@ -60,29 +57,39 @@ class ChatManager {
         const message = this.input.value.trim();
         if (!message || this.isLoading) return;
 
-        // 清空输入框
         this.input.value = '';
         this.input.style.height = 'auto';
 
-        // 获取当前选中的模板
+        // 获取模板和 RAG 状态
         const template = this.templateManager.getActiveTemplate();
+        const ragParams = this.ragManager.getRagParams();
 
         // 如果有模板选中，清除激活状态
         if (template) {
             this.templateManager.clearActive();
         }
 
-        // 添加用户消息
-        const displayMessage = template ? `[${template}] ${message}` : message;
+        // 构建显示消息
+        let displayMessage = message;
+        if (template) {
+            displayMessage = `[${template}] ${message}`;
+        }
+        if (ragParams.rag) {
+            displayMessage = `📚 ${displayMessage}`;
+        }
+
         this.addMessage('user', displayMessage);
 
-        // 显示加载状态
         this.setLoading(true);
         this.showTyping();
 
         try {
             // 构建请求参数
-            const payload = { message };
+            const payload = {
+                message: message,
+                ...ragParams
+            };
+
             if (this.sessionId) {
                 payload.session_id = this.sessionId;
             }
@@ -90,32 +97,94 @@ class ChatManager {
                 payload.template = template;
             }
 
-            // 调用 API
             const result = await ApiClient.chat(payload);
 
-            // 保存会话ID
             this.sessionId = result.session_id;
             this.updateSessionInfo();
 
-            // 隐藏加载状态
             this.hideTyping();
             this.setLoading(false);
 
-            // 添加 AI 回复
-            this.addMessage('assistant', result.response);
+            // 处理 RAG 来源引用
+            if (result.rag) {
+                this.addRagMessage(result);
+            } else {
+                this.addMessage('assistant', result.response);
+            }
 
         } catch (error) {
-            // 隐藏加载状态
             this.hideTyping();
             this.setLoading(false);
-
-            // 显示错误消息
             this.addMessage('assistant', `❌ 出错了：${error.message}`);
         }
     }
 
     /**
-     * 添加消息到界面
+     * 添加 RAG 消息（含来源引用）
+     */
+    addRagMessage(result) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message assistant';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.textContent = '🤖';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble';
+
+        // 添加 RAG 标签
+        const ragBadge = document.createElement('span');
+        if (result.is_fallback) {
+            ragBadge.className = 'fallback-badge';
+            ragBadge.textContent = '📚 未找到相关文档';
+        } else {
+            ragBadge.className = 'rag-badge';
+            ragBadge.textContent = '📚 知识库增强';
+        }
+        bubble.appendChild(ragBadge);
+
+        // 添加回复内容（简单处理，后续可支持 Markdown 渲染）
+        const contentText = document.createTextNode(result.response);
+        bubble.appendChild(contentText);
+
+        // 添加来源引用（如果有）
+        if (result.sources && result.sources.length > 0 && !result.is_fallback) {
+            const sourceRef = document.createElement('div');
+            sourceRef.className = 'source-reference';
+
+            const title = document.createElement('div');
+            title.className = 'source-title';
+            title.textContent = '📎 引用来源：';
+            sourceRef.appendChild(title);
+
+            result.sources.forEach(source => {
+                const item = document.createElement('div');
+                item.className = 'source-item';
+                const name = document.createElement('span');
+                name.textContent = source.source || '未知来源';
+                const score = document.createElement('span');
+                score.className = 'source-score';
+                score.textContent = `相关度: ${(source.score || 0) * 100}%`;
+                item.appendChild(name);
+                item.appendChild(score);
+                sourceRef.appendChild(item);
+            });
+
+            bubble.appendChild(sourceRef);
+        }
+
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(bubble);
+
+        this.container.appendChild(messageDiv);
+        this.scrollToBottom();
+
+        this.messages.push({ role: 'assistant', content: result.response });
+    }
+
+    /**
+     * 添加普通消息
      */
     addMessage(role, content) {
         const messageDiv = document.createElement('div');
@@ -123,11 +192,7 @@ class ChatManager {
 
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
-        if (role === 'user') {
-            avatar.textContent = '👤';
-        } else {
-            avatar.textContent = '🤖';
-        }
+        avatar.textContent = role === 'user' ? '👤' : '🤖';
 
         const bubble = document.createElement('div');
         bubble.className = 'message-bubble';
@@ -185,6 +250,10 @@ class ChatManager {
         this.sessionId = null;
         this.sessionInfo.textContent = '新会话';
         this.templateManager.clearActive();
+        // 关闭 RAG
+        if (this.ragManager.isEnabled()) {
+            this.ragManager.toggleRag();
+        }
         this.showWelcome();
     }
 
@@ -199,7 +268,7 @@ class ChatManager {
             <div class="message-bubble">
                 <strong>你好！我是 AI 测试助手</strong><br>
                 我可以帮你生成测试用例、编写测试代码、构造 Mock 数据。<br>
-                点击下方的模板按钮快速开始 👇
+                点击模板按钮快速开始，或开启 📚 知识库获得业务文档支持。
             </div>
         `;
         this.container.appendChild(welcomeDiv);

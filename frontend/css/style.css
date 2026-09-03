@@ -688,3 +688,255 @@ body {
         font-size: 11px;
     }
 }
+
+/* ==================== 控制栏 ==================== */
+.control-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px 10px 4px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.template-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.template-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    background: var(--bg-white);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.template-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-bg);
+}
+
+.template-btn.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+.template-btn .icon {
+    font-size: 14px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ==================== RAG 开关 ==================== */
+.rag-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    background: var(--bg-white);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.rag-toggle:hover {
+    border-color: #8b5cf6;
+}
+
+.rag-toggle.active {
+    border-color: #8b5cf6;
+    background: #f5f3ff;
+    color: #7c3aed;
+}
+
+.rag-toggle .rag-icon {
+    font-size: 14px;
+}
+
+.rag-toggle .rag-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+    transition: var(--transition);
+}
+
+.rag-toggle.active .rag-status {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+}
+
+/* ==================== 上传按钮 ==================== */
+.btn-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--border-light);
+    border-radius: 50%;
+    background: var(--bg-white);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 14px;
+}
+
+.btn-upload:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-bg);
+}
+
+/* ==================== 来源引用样式 ==================== */
+.source-reference {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.source-reference .source-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.source-reference .source-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    font-size: 12px;
+}
+
+.source-reference .source-score {
+    color: var(--text-muted);
+}
+
+.rag-badge {
+    display: inline-block;
+    padding: 1px 10px;
+    background: #f5f3ff;
+    color: #7c3aed;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.fallback-badge {
+    display: inline-block;
+    padding: 1px 10px;
+    background: #fef3c7;
+    color: #d97706;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+/* ==================== 上传状态提示 ==================== */
+.upload-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 12px;
+    background: #1e293b;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    z-index: 100;
+    animation: toastIn 0.3s ease;
+}
+
+.upload-toast.success {
+    background: #065f46;
+}
+
+.upload-toast.error {
+    background: #991b1b;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 768px) {
+    .control-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+    .template-buttons {
+        gap: 4px;
+    }
+    .template-btn {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+    .control-group {
+        justify-content: flex-end;
+    }
+    .rag-toggle {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+    .btn-upload {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .template-btn {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+    .template-btn .icon {
+        font-size: 11px;
+    }
+    .rag-toggle {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+    .rag-toggle .rag-icon {
+        font-size: 12px;
+    }
+}

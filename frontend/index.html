@@ -46,7 +46,6 @@
 
     <!-- ==================== 主内容区 ==================== -->
     <main class="main-content" id="mainContent">
-        <!-- 消息将动态渲染到这里 -->
         <div class="messages-container" id="messagesContainer">
             <!-- 欢迎消息由 JavaScript 渲染 -->
         </div>
@@ -79,10 +78,23 @@
     <!-- ==================== 底部输入区 ==================== -->
     <footer class="input-area">
         <div class="input-wrapper">
-            <!-- 模板快捷按钮栏（新增） -->
-            <div class="template-bar" id="templateBar">
-                <!-- 模板按钮由 JavaScript 动态渲染 -->
+            <!-- 功能控制栏：模板按钮 + RAG 开关 -->
+            <div class="control-bar" id="controlBar">
+                <div class="template-buttons" id="templateBar">
+                    <!-- 模板按钮由 JavaScript 动态渲染 -->
+                </div>
+                <div class="control-group">
+                    <button class="rag-toggle" id="ragToggle" title="启用知识库检索增强">
+                        <span class="rag-icon">📚</span>
+                        <span class="rag-label">知识库</span>
+                        <span class="rag-status" id="ragStatus">off</span>
+                    </button>
+                    <button class="btn-upload" id="uploadBtn" title="上传文档到知识库">
+                        <span class="upload-icon">📤</span>
+                    </button>
+                </div>
             </div>
+
             <div class="input-container">
                 <textarea
                     id="messageInput"
@@ -102,9 +114,13 @@
         </div>
     </footer>
 
+    <!-- 隐藏的文件上传 input -->
+    <input type="file" id="fileInput" accept=".txt,.md,.markdown" style="display: none;">
+
     <!-- ==================== JavaScript ==================== -->
     <script src="/static/js/api.js"></script>
     <script src="/static/js/templates.js"></script>
+    <script src="/static/js/rag.js"></script>
     <script src="/static/js/chat.js"></script>
     <script src="/static/js/app.js"></script>
 </body>
