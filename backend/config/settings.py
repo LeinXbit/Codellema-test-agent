@@ -13,9 +13,9 @@ class Config:
 
     # RAG 配置
     CHROMA_PERSIST_DIR = "./data/chroma_db"
-    CHUNK_SIZE = 512
-    CHUNK_OVERLAP = 50
-    EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+    CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", 512))
+    CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", 50))
+    EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 
     # 生成配置
     MAX_TOKENS = int(os.getenv("MAX_TOKENS", 2048))
