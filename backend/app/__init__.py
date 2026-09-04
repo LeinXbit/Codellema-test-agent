@@ -54,9 +54,12 @@ def create_app():
 def register_blueprints(app):
     """注册所有路由蓝图"""
     from app.routes.chat import chat_bp
-    app.register_blueprint(chat_bp, url_prefix='/api')
-    logger.info("路由蓝图注册完成")
+    from app.routes.metrics import metrics_bp
 
+    app.register_blueprint(chat_bp, url_prefix='/api')
+    app.register_blueprint(metrics_bp, url_prefix='/api/metrics')
+
+    logger.info("路由蓝图注册完成")
 
 def register_frontend_routes(app):
     """注册前端路由"""

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Test-Workbench - 质量监控</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/metrics.css">
+</head>
+<body>
+    <!-- ==================== 顶栏 ==================== -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo-wrapper">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="10" fill="url(#logoGrad)"/>
+                    <path d="M12 26L20 14L28 26H12Z" fill="white" opacity="0.9"/>
+                    <circle cx="20" cy="20" r="2" fill="white" opacity="0.6"/>
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#6366f1"/>
+                            <stop offset="100%" stop-color="#8b5cf6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="app-name">AI-Test-Workbench</span>
+            </div>
+            <span class="app-badge">监控看板</span>
+        </div>
+        <div class="header-right">
+            <a href="/" class="btn-back">← 返回对话</a>
+            <button class="btn-refresh" id="refreshBtn" title="刷新数据">🔄</button>
+        </div>
+    </header>
+
+    <!-- ==================== 概览卡片 ==================== -->
+    <section class="metrics-overview" id="metricsOverview">
+        <div class="metric-card" data-metric="retrieval_recall_rate">
+            <div class="metric-header">
+                <span class="metric-icon">🔍</span>
+                <span class="metric-name">检索召回率</span>
+            </div>
+            <div class="metric-value">--%</div>
+            <div class="metric-footer">
+                <span class="metric-target">目标: ≥80%</span>
+                <span class="metric-status">--</span>
+            </div>
+        </div>
+        <div class="metric-card" data-metric="case_usability_rate">
+            <div class="metric-header">
+                <span class="metric-icon">📋</span>
+                <span class="metric-name">用例可用率</span>
+            </div>
+            <div class="metric-value">--%</div>
+            <div class="metric-footer">
+                <span class="metric-target">目标: ≥70%</span>
+                <span class="metric-status">--</span>
+            </div>
+        </div>
+        <div class="metric-card" data-metric="code_executable_rate">
+            <div class="metric-header">
+                <span class="metric-icon">🧪</span>
+                <span class="metric-name">代码可执行率</span>
+            </div>
+            <div class="metric-value">--%</div>
+            <div class="metric-footer">
+                <span class="metric-target">目标: ≥75%</span>
+                <span class="metric-status">--</span>
+            </div>
+        </div>
+        <div class="metric-card" data-metric="hallucination_rate">
+            <div class="metric-header">
+                <span class="metric-icon">⚠️</span>
+                <span class="metric-name">幻觉率</span>
+            </div>
+            <div class="metric-value">--%</div>
+            <div class="metric-footer">
+                <span class="metric-target">目标: ≤20%</span>
+                <span class="metric-status">--</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 图表区域 ==================== -->
+    <section class="charts-section">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>📈 趋势图（最近 30 天）</h3>
+                <div class="chart-controls">
+                    <button class="chart-btn active" data-metric="retrieval_recall_rate">检索召回率</button>
+                    <button class="chart-btn" data-metric="case_usability_rate">用例可用率</button>
+                    <button class="chart-btn" data-metric="code_executable_rate">代码可执行率</button>
+                    <button class="chart-btn" data-metric="hallucination_rate">幻觉率</button>
+                </div>
+            </div>
+            <div class="chart-body">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 详细数据区域 ==================== -->
+    <section class="details-section">
+        <div class="details-panel feedback-panel">
+            <div class="panel-header">
+                <h3>📝 人工反馈</h3>
+                <span class="panel-badge" id="feedbackCount">0 条</span>
+            </div>
+            <div class="panel-body" id="feedbackList">
+                <div class="empty-state">暂无反馈数据</div>
+            </div>
+        </div>
+        <div class="details-panel sample-panel">
+            <div class="panel-header">
+                <h3>📊 标注进度</h3>
+                <span class="panel-badge" id="sampleCount">0 个样本</span>
+            </div>
+            <div class="panel-body" id="sampleStats">
+                <div class="empty-state">暂无样本数据</div>
+            </div>
+        </div>
+        <div class="details-panel template-panel">
+            <div class="panel-header">
+                <h3>📦 模板统计</h3>
+            </div>
+            <div class="panel-body" id="templateStats">
+                <div class="empty-state">暂无模板数据</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== JavaScript ==================== -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="/static/js/metrics.js"></script>
+</body>
+</html>

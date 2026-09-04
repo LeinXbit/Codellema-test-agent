@@ -3,7 +3,6 @@
 负责加载多种格式的文档（MD/TXT），并进行分块处理
 """
 
-import sys
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Union
 
